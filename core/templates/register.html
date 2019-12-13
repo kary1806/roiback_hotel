@@ -1,0 +1,74 @@
+
+{% load static %}
+<link rel="stylesheet" type="text/css" href='{% static "css/index.css" %}'>
+
+<!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous"> -->
+
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+{% block content %}
+<div class="wrapper fadeInDown">
+  <div id="formContent">
+    <!-- Tabs Titles -->
+     <div class="fadeIn first" style="margin-top: 10%">
+
+      <a style="cursor: pointer;margin: 6px" onclick="window.location.href='{{ '/' }}'" class="fadeIn fourth" >Home</a>
+    </div>
+
+     {% if message and message != '' %}
+      <div class="alert alert-primary" role="alert">
+        {{ message }}
+      </div>
+    {% endif %}
+
+    <!-- Login Form --> 
+     <form action="." method="post" enctype="application/json">
+        {% csrf_token %}
+                       
+           <input  id="first_name" type="text" class="fadeIn second" name="first_name" placeholder="Nombres">
+
+           <input  id="last_name" type="text" class="fadeIn second" name="last_name" placeholder="Apellidos">
+
+
+           <input  id="email" type="text" class="fadeIn second" name="email" placeholder="Correo">
+
+           <input  id="phone" type="text" class="fadeIn second" name="phone" placeholder="Teléfono">
+
+           <input  id="date_birth" type="text" class="fadeIn second" name="date_birth" placeholder="YYYY-MM-DD">
+
+           <div class="form-group">
+           <select class="form-control" name="gender">
+              <option value=0>[Genero]</option>
+              <option value=1>Femenino</option>
+              <option value=3>Masculino</option>
+            </select>  
+          </div>
+
+          <div class="form-group">
+           <select class="form-control" name="type_document_id">
+              <option value=0>[Tipo de Documento]</option>
+                {% for item in type_document %}
+                   <option value="{{ item.id }}">{{ item.name }}</option>
+                 {% endfor %} 
+            </select>  
+          </div>
+           
+        <input  id="number_document" type="text" class="fadeIn second" name="number_document" placeholder="Numero de Documento">
+
+        <input id="password" type="password" class="fadeIn third" name="password" placeholder="Clave">
+
+        <input style="cursor: pointer;margin: 2px" type="submit" class="fadeIn fourth" value="Registrar">
+
+                   
+
+    </form>
+
+  </div>
+</div>
+{% endblock %}
+
+
+
+
+

@@ -1,0 +1,185 @@
+
+{% load static %}
+
+
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+<link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+
+
+<link rel="stylesheet" type="text/css" href='{% static "css/index.css" %}'>
+
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script type="text/javascript">
+  var login = "{% url 'core.login' %}"  
+  var logout = "{% url 'core.logout' %}"  
+
+</script>
+{% block content %}
+
+    <style type="text/css">
+        
+        body {
+          background: #56baed; 
+        }
+    </style>
+ <body>
+       
+            <nav class="navbar back" style="background: #a1d038 ">
+                <a href="{% url 'core.index' %}" class="text-white">
+                Hotel 
+                </a>
+
+                <a href="{% url 'core.index' %}" class="text-white">
+                  Hola, {{ user.first_name }}
+                </a>
+                {% if user.is_authenticated == False %}
+                 <button  class="btn btn_sucess" onclick="window.location.href=login">
+                   Login</button>
+                {% endif %}
+
+                {% if user.is_authenticated %}
+                  <button class="btn btn_sucess" onclick="window.location.href=logout" >
+                 Cerrar Sesion</button>
+                {% endif %}
+
+                
+            </nav>
+
+            <div class="container">
+            <div class="row mt-4">
+              <div class="col-md-3">
+                  
+                  <div class="card">
+                     <form class="card-body">
+                        <div class="form-group" align="center">
+                           <label>Comentar</label>
+                        </div>
+
+                        <div id="contenido" style="display: none;" class="alert alert-primary" role="alert">
+                          <span name="message" id="message"></span>
+                        </div>
+
+                         
+                         <p>Comentario:</p>
+                            <textarea id="comment"
+                            name="comment" class="form-control" placeholder="Comentario">
+                            </textarea><br>
+                        
+                        <button type="button"  class="btn btn-primary" onclick="save({{ room.id }})">Guardar</button>
+                    </form>
+                </div>
+              </div>
+
+              <div class="col-md-9">
+                <p>Hotel: {{ room.hotel.name }}</p>
+                <p>Habitacion: {{ room.name }}</p>
+                 
+                 
+
+                <table>
+                  <tr>
+                    <th>Persona</th>
+                      <th>Fecha</th>
+                    <th>Comentario</th>
+                  </tr>
+
+                   {% for item in comments %}
+                  <tr>
+                   
+                    <td >{{ item.username }}</td>
+                    <td >{{ item.date_created |date:"D d M Y" }}</td>
+                    <td >{{ item.comment }}</td>
+                  </tr>
+
+                  {% endfor %}
+
+                </table><br>
+
+                {% if comments|length == 0 %}
+                <div class="alert alert-warning" role="alert">
+                  No hay Comentarios!
+                </div>
+                {% endif %}
+                
+
+              </div>
+              
+            </div>
+          </div>
+            </div>
+          </div>
+
+    </body>
+{% endblock %}
+
+
+<script type="text/javascript">
+  
+
+  async function save(id) {
+      let payload = {
+        'typeroom_id': id,
+        'type_activity': 2,
+        'by_like': false,
+        'comment': $("#comment").val()
+      };
+      let csrftoken = getCookie('csrftoken');
+      var url = window.location.origin+"/activity_room/";
+
+          fetch(url, {
+            method: "POST",
+            body: JSON.stringify(payload),
+            headers: { "X-CSRFToken": csrftoken,'Content-Type': 'application/json' },
+        }).then(res => {
+            if (res.status == 200) {
+              window.location.reload(true);
+            }else{
+              res.json().then(jdata => {
+                  var el = document.getElementById("contenido"); //se define la variable "el" igual a nuestro div
+                  el.style.display =  'block' ; //damos un atributo display:none que oculta el div
+                  var el2 = document.getElementById("message");
+                  el2.innerHTML=jdata.message;
+              });
+              
+
+            }
+        });
+      
+  }
+
+
+
+  //   async function all() {
+  //     let csrftoken = getCookie('csrftoken');
+  //     console.log(window.location.origin)
+  //     var url = window.location.origin+"/reservation/";
+  //     console.log(url)
+  //     window.location.href=url;
+      
+  // }
+
+
+  function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = cookies[i].trim();
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+</script>
+
+
+
+
+

@@ -1,0 +1,166 @@
+
+{% load static %}
+
+
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+<link rel="stylesheet" type="text/css" href='{% static "css/index.css" %}'>
+
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script type="text/javascript">
+  var login = "{% url 'core.login' %}"  
+  var logout = "{% url 'core.logout' %}"  
+  var hotel = "{% url 'core.hotel' %}" 
+  var reservation = "{% url 'core.reservation' %}"  
+  var rooms = "{% url 'core.rooms' %}"  
+  var rooms = "{% url 'core.rooms' %}"  
+  var list_reservation = "{% url 'core.list_reservation' %}"  
+
+</script>
+{% block content %}
+
+    <style type="text/css">
+        
+        body {
+          background: #56baed; 
+        }
+    </style>
+  <body>
+       
+            <nav class="navbar back" style="background: #a1d038 ">
+                <a href="{% url 'core.index' %}" class="text-white">
+                Hotel 
+                </a>
+
+                {% if user.first_name %}
+                <a href="{% url 'core.index' %}" class="text-white">
+                  Hola, {{ user.first_name }}
+                </a>
+                {% endif %}
+
+
+                {% if user.is_authenticated == False %}
+                 <button  class="btn btn_sucess" onclick="window.location.href=login">
+                   Login</button>
+                {% endif %}
+
+                {% if user.is_authenticated %}
+                  <button class="btn btn_sucess" onclick="window.location.href=logout" >
+                 Cerrar Sesion</button>
+                {% endif %}
+
+                
+            </nav>
+
+            <div class="container">
+            <div class="row mt-4">
+              <div class="col-md-12">
+                 <div class="row">
+                    {% if user.is_authenticated %}
+                   <!--   <div class="col-md-4">
+                          <div class="card mt-4">
+
+                            <div class="card-body" align="center">
+                               <i class="far fa-user icon_style"></i>
+                            </div>
+
+
+                            <div class="card-footer" align="center">
+                              <h4>Usuarios</h4>
+                               <button  class="btn btn_sucess">
+                               Administrar</button>
+                            </div>
+
+                          </div>
+                      </div> -->
+
+                         <div class="col-md-4">
+                          <div class="card mt-4">
+
+                            <div class="card-body" align="center">
+                               <i class="far fa-user icon_style"></i>
+                            </div>
+
+
+                            <div class="card-footer" align="center">
+                              <h4>Habitaciones</h4>
+                               <button onclick="window.location.href=rooms" class="btn btn_sucess">
+                               Administrar</button>
+                            </div>
+
+                          </div>
+                      </div>
+
+
+                      <div class="col-md-4">
+                          <div class="card mt-4">
+
+                            <div class="card-body" align="center">
+                               <i class="fas fa-bus icon_style"></i>
+                            </div>
+
+
+                            <div class="card-footer" align="center">
+                              <h4>Hoteles</h4>
+                               <button onclick="window.location.href=hotel"  class="btn btn_sucess">
+                               Administrar</button>
+                            </div>
+
+                          </div>
+                      </div>
+                      {% endif %}
+
+
+                      <div class="col-md-4">
+                          <div class="card mt-4">
+
+                            <div class="card-body" align="center">
+                               <i class="fas fa-route icon_style"></i>
+                            </div>
+
+
+                            <div class="card-footer" align="center">
+                              <h4>Reservar</h4>
+                               <button onclick="window.location.href=reservation" class="btn btn_sucess">
+                               Administrar</button>
+                            </div>
+
+                          </div>
+                      </div>
+
+                      {% if user.is_authenticated %}
+                        <div class="col-md-4">
+                          <div class="card mt-4">
+
+                            <div class="card-body" align="center">
+                               <i class="fas fa-route icon_style"></i>
+                            </div>
+
+
+                            <div class="card-footer" align="center">
+                              <h4>Listado de Reservaciones</h4>
+                               <button onclick="window.location.href=list_reservation" class="btn btn_sucess">
+                               Administrar</button>
+                            </div>
+
+                          </div>
+                      </div>
+                      {% endif %}
+                      
+                      </div>
+
+
+                 </div>
+              </div>
+              
+            </div>
+          </div>
+
+    </body>
+{% endblock %}
+
+
+
+
+

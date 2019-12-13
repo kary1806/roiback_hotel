@@ -1,0 +1,393 @@
+
+{% load static %}
+
+
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+<link rel="stylesheet" type="text/css" href='{% static "css/index.css" %}'>
+
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script type="text/javascript">
+  var login = "{% url 'core.login' %}"  
+  var logout = "{% url 'core.logout' %}"  
+
+</script>
+{% block content %}
+
+    <style type="text/css">
+        
+        body {
+          background: #56baed; 
+        }
+    </style>
+ <body>
+       
+            <nav class="navbar back" style="background: #a1d038 ">
+                <a href="{% url 'core.index' %}" class="text-white">
+                Hotel 
+                </a>
+
+                <a href="{% url 'core.index' %}" class="text-white">
+                  Hola, {{ user.first_name }}
+                </a>
+                {% if user.is_authenticated == False %}
+                 <button  class="btn btn_sucess" onclick="window.location.href=login">
+                   Login</button>
+                {% endif %}
+
+                {% if user.is_authenticated %}
+                  <button class="btn btn_sucess" onclick="window.location.href=logout" >
+                 Cerrar Sesion</button>
+                {% endif %}
+
+                
+            </nav>
+
+            <div class="container">
+            <div class="row mt-4">
+              <div class="col-md-3">
+                  
+                  <div class="card">
+                     <form id="frm1" name="frm1" 
+                     class="card-body">
+              {% csrf_token %}
+
+                        <div class="form-group" align="center">
+                           <label>Hoteles</label>
+                        </div>
+
+                        <div id="contenido" style="display: none;" class="alert alert-primary" role="alert">
+                          <span name="message" id="message"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <input type="text" id="name"
+                            name="name" class="form-control" placeholder="Nombre">
+                            </input>
+                        </div>
+
+                        <div class="form-group">
+                           <select class="form-control" name="status" id="status">
+                              <option value=1>Activo</option>
+                              <option value=2>Inactivo</option>
+                            </select>  
+                          </div>
+
+                         <div class="form-group">
+                           <select class="form-control" name="type_document_id" id="type_document_id">
+                              <option value=0>[Tipo de Documento]</option>
+                                {% for item in type_document %}
+                                   <option value="{{ item.id }}">{{ item.name }}</option>
+                                 {% endfor %} 
+                            </select>  
+                          </div>
+
+                          <div class="form-group">
+                            <input type="text" id="number_document"
+                            name="number_document" class="form-control" placeholder="Numero de Documento">
+                            </input>
+                        </div>
+
+                        <div class="form-group">
+                           <select class="form-control" name="city_id" id="city_id">
+                              <option value=0>[Ciudad]</option>
+                                {% for item in city %}
+                                   <option value="{{ item.id }}">{{ item.name }}</option>
+                                 {% endfor %} 
+                            </select>  
+                          </div>
+
+                         <div>
+                           <p>Categorias</p>
+                                {% for item in category %}
+                                   <input type="checkbox" name="categoryarray" value="{{ item.id }}" id="{{ item.id }}">
+                                   {{ item.name }}<br>
+
+                                 {% endfor %} 
+                          </div><br>
+
+
+                          <div>
+                           <p>Tags</p>
+                                {% for item in tags %}
+                                   <input type="checkbox" name="tagsarray" value="{{ item.id }}" id="{{ item.id }}">
+                                   {{ item.name }}<br>
+                                 {% endfor %}
+                          </div><br>
+
+                          <input type="hidden" name="tags" id="tags" value="">
+                          <input type="hidden" name="category" id="category" value="">
+
+                          <p>Fecha Publicacion</p>
+                           <input  id="date_publish" type="text" class="fadeIn second" name="date_publish" placeholder="YYYY-MM-DD"><br>
+
+                           <p>Fecha Inactivo</p>
+                           <input  id="date_inactive" type="text" class="fadeIn second" name="date_inactive" placeholder="YYYY-MM-DD"><br><br>
+
+                        <button name="btn1" id="btn1" type="button" onclick="senddata()" class="btn btn-primary">Guardar</button>
+
+                    </form>
+                </div>
+              </div>
+
+              <div class="col-md-9">
+                
+
+                <div class="row">
+
+                      {% for item in hoteles %}
+                     <div class="col-md-4" >
+                          <div class="card mt-4">
+                            <div class="card-header">
+                               <h3> Hotel </h3>
+                            </div>
+
+                            <div class="card-body">
+                               <p>Nombre Hotel: <span>{{ item.name }}</span></p> 
+                               <p>Ciudad: <span>{{ item.city_name }}</span></p> 
+                               <p>Fecha de Publicacion: 
+                                {% if item.date_publish is not None %}
+                                <span >{{ item.date_publish}}</span>
+                                {% endif %}
+                              </p> 
+                               <p>Estado: 
+                                {% if item.status == 1 %}
+                                <span>Activo</span>
+                                {% endif %}
+
+                                 {% if item.status == 2 %}
+                                <span>Inactivo</span>
+                                {% endif %}
+                              </p> 
+                            </div>
+
+
+                            <div class="card-footer">
+                               <button class="btn btn-primary" onclick="editdata({{ item.id }})" >
+                               Modificar</button>
+
+                               <button class="btn btn-danger" onclick="deletdata({{ item.id }})" >
+                               Borrar</button>
+                            </div>
+
+                          </div>
+                      </div>
+                      {% endfor %}
+
+                 </div>
+
+              </div>
+              
+            </div>
+          </div>
+          <input type="hidden" name="hotel_id" id="hotel_id">
+
+    </body>
+{% endblock %}
+
+
+<script type="text/javascript">
+  
+
+  async function senddata() {
+    
+      var checked = "";
+      var checked2 = "";
+      var x=0
+      //Recorremos todos los input checkbox con name = Colores y que se encuentren "checked"
+      $("input[name='tagsarray']:checked").each(function ()
+      {
+        if(x==0){
+            checked=$(this).attr("value");
+          }else{
+            checked=checked+","+$(this).attr("value");
+          }
+          x=x+1;
+          // checked.push(($(this).attr("value")));
+      });
+
+      var x=0
+      //Recorremos todos los input checkbox con name = Colores y que se encuentren "checked"
+      $("input[name='categoryarray']:checked").each(function ()
+      {
+        if(x==0){
+            checked2=$(this).attr("value");
+          }else{
+            checked2=checked2+","+$(this).attr("value");
+          }
+          x=x+1;
+          // checked.push(($(this).attr("value")));
+      });
+      tags.value=checked;
+      category.value=checked2;
+
+      let payload = {
+        'name': $("#name").val(),
+        'type_document_id': $("#type_document_id").val(),
+        'number_document': $("#number_document").val(),
+        'city_id': $("#city_id").val(),
+        'status': $("#status").val(),
+        'date_publish': $("#date_publish").val(),
+        'date_inactive': $("#date_inactive").val(),
+        'category': checked2,
+        'tags': checked2,
+        'id':$("#hotel_id").val()
+      };
+      let csrftoken = getCookie('csrftoken');
+      var url = window.location.href;
+
+      if($("#hotel_id").val()>0){
+        fetch(url, {
+            method: "PUT",
+            body: JSON.stringify(payload),
+            headers: { "X-CSRFToken": csrftoken,'Content-Type': 'application/json' },
+        }).then(res => {
+            if (res.status == 200) {
+              window.location.reload(true);
+            }else{
+              res.json().then(jdata => {
+                  var el = document.getElementById("contenido"); //se define la variable "el" igual a nuestro div
+                  el.style.display =  'block' ; //damos un atributo display:none que oculta el div
+                  var el2 = document.getElementById("message");
+                  el2.innerHTML=jdata.message;
+              });
+              
+
+            }
+        });
+
+      }else{
+          fetch(url, {
+            method: "POST",
+            body: JSON.stringify(payload),
+            headers: { "X-CSRFToken": csrftoken,'Content-Type': 'application/json' },
+        }).then(res => {
+            if (res.status == 200) {
+              window.location.reload(true);
+            }else{
+              res.json().then(jdata => {
+                  var el = document.getElementById("contenido"); //se define la variable "el" igual a nuestro div
+                  el.style.display =  'block' ; //damos un atributo display:none que oculta el div
+                  var el2 = document.getElementById("message");
+                  el2.innerHTML=jdata.message;
+              });
+              
+
+            }
+        });
+
+      }
+      
+  }
+
+  async function deletdata(id) {
+    // e.preventDefault()
+    let csrftoken = getCookie('csrftoken');
+    let payload = {
+        hotel_id:id
+    }
+
+    var url = window.location.href;
+    fetch(url, {
+        method: "DELETE",
+        body: JSON.stringify(payload),
+        headers: { "X-CSRFToken": csrftoken,'Content-Type': 'application/json' },
+    }).then(res => {
+        if (res.status == 200) {
+          window.location.reload(true);
+        }else{
+              res.json().then(jdata => {
+                  var el = document.getElementById("contenido"); //se define la variable "el" igual a nuestro div
+                  el.style.display =  'block' ; //damos un atributo display:none que oculta el div
+                  var el2 = document.getElementById("message");
+                  el2.innerHTML=jdata.message;
+              });
+              
+
+            }
+    });
+  }
+
+
+  async function editdata(id) {
+    let csrftoken = getCookie('csrftoken');
+    
+    var url = window.location.href+id+"/";
+    fetch(url, {
+        method: "GET",
+        headers: { "X-CSRFToken": csrftoken,'Content-Type': 'application/json' },
+    }).then(res => {
+        if (res.status == 200) {
+            res.json().then(jdata => {
+                document.getElementById("name").value=jdata.data[0].name;
+                document.getElementById("type_document_id").value=jdata.data[0].type_document_id;
+                document.getElementById("number_document").value=jdata.data[0].number_document;
+                document.getElementById("hotel_id").value=jdata.data[0].id;
+                document.getElementById("date_publish").value=jdata.data[0].date_publish;
+                document.getElementById("date_inactive").value=jdata.data[0].date_inactive;
+                document.getElementById("city_id").value=jdata.data[0].city_id;
+                document.getElementById("status").value=jdata.data[0].status;
+                ids_category=jdata.data[0].category.split(",")
+                ids_tags=jdata.data[0].tags.split(",")
+
+                  $("input[name='categoryarray']").each(function (){
+                      var sw=0;
+                      for (var i = 0; i < ids_category.length; i++) {
+                          if($(this).attr("value")==ids_category[i]){
+                              $(this).attr("checked",true);
+                              sw=1;
+                          }
+                      }
+                      if(sw==0){
+                        $(this).attr("checked",false);
+                      }
+                  }); 
+
+
+                  $("input[name='tagsarray']").each(function (){
+                      var sw=0;
+                      for (var i = 0; i < ids_tags.length; i++) {
+                          if($(this).attr("value")==ids_tags[i]){
+                              $(this).attr("checked",true);
+                              sw=1;
+                          }
+                      }
+                      if(sw==0){
+                        $(this).attr("checked",false);
+                      }
+                  }); 
+            });
+          
+        }else{
+              res.json().then(jdata => {
+                  var el = document.getElementById("contenido"); //se define la variable "el" igual a nuestro div
+                  el.style.display =  'block' ; //damos un atributo display:none que oculta el div
+                  var el2 = document.getElementById("message");
+                  el2.innerHTML=jdata.message;
+              });
+              
+
+          }
+    });
+  }
+
+  function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = cookies[i].trim();
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+</script>
+
+

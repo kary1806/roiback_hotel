@@ -1,0 +1,119 @@
+
+{% load static %}
+
+
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+<link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+
+
+<link rel="stylesheet" type="text/css" href='{% static "css/index.css" %}'>
+
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script type="text/javascript">
+  var login = "{% url 'core.login' %}"  
+  var logout = "{% url 'core.logout' %}"  
+
+</script>
+{% block content %}
+
+    <style type="text/css">
+        
+        body {
+          background: #56baed; 
+        }
+    </style>
+ <body>
+       
+            <nav class="navbar back" style="background: #a1d038 ">
+                <a href="{% url 'core.index' %}" class="text-white">
+                Hotel 
+                </a>
+
+                <a href="{% url 'core.index' %}" class="text-white">
+                  Hola, {{ user.first_name }}
+                </a>
+                {% if user.is_authenticated == False %}
+                 <button  class="btn btn_sucess" onclick="window.location.href=login">
+                   Login</button>
+                {% endif %}
+
+                {% if user.is_authenticated %}
+                  <button class="btn btn_sucess" onclick="window.location.href=logout" >
+                 Cerrar Sesion</button>
+                {% endif %}
+
+                
+            </nav>
+
+            <div class="container">
+            <div class="row mt-4">
+
+              <div class="col-md-9">
+
+                     <div class="card">
+                     <form class="card-body">
+                        <div class="form-group" align="center">
+                           <label>Detalle de la Reserva</label>
+                        </div>
+                         
+                       <!--     <div class="alert alert-warning" role="alert">
+                              Su reserva fue registrada!
+                            </div> -->
+                         
+                        <div>
+                            <p>Hotel:  {{ reservation.name_hotel }}</p>
+                        </div>
+
+                        <div>
+                            <p>Ciudad:  {{ reservation.name_city }}</p>
+                        </div>
+
+                         <div>
+                            <p>Habitacion:  {{ reservation.name_room }}</p>
+                        </div>
+
+                         <div>
+                            <p>Personas:  {{ reservation.count_person }}</p>
+                        </div>
+
+                         <div>
+                            <p>Precio por Noche:  {{ reservation.price }}</p>
+                        </div>
+
+                         <div>
+                            <p>Fecha Inicio:  {{ reservation.date_initial }}</p>
+                        </div>
+
+                         <div>
+                            <p>Fecha Final:  {{ reservation.date_end }}</p>
+                        </div>
+
+                         <div>
+                            <p>Total:  {{ reservation.total }}</p>
+                        </div>
+
+                         <div>
+                            <p>Observacion:</p>
+                            <p>{{ reservation.description }}</p>
+                        </div>
+                    </form>
+                </div>
+
+               
+              </div>
+            </div>
+          </div>
+
+    </body>
+{% endblock %}
+
+
+
+</script>
+
+
+
+
+

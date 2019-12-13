@@ -1,0 +1,133 @@
+
+{% load static %}
+
+
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+<link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+
+
+<link rel="stylesheet" type="text/css" href='{% static "css/index.css" %}'>
+
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script type="text/javascript">
+  var login = "{% url 'core.login' %}"  
+  var logout = "{% url 'core.logout' %}"  
+
+</script>
+{% block content %}
+
+    <style type="text/css">
+        
+        body {
+          background: #56baed; 
+        }
+    </style>
+ <body>
+       
+            <nav class="navbar back" style="background: #a1d038 ">
+                <a href="{% url 'core.index' %}" class="text-white">
+                Hotel 
+                </a>
+
+                <a href="{% url 'core.index' %}" class="text-white">
+                  Hola, {{ user.first_name }}
+                </a>
+                {% if user.is_authenticated == False %}
+                 <button  class="btn btn_sucess" onclick="window.location.href=login">
+                   Login</button>
+                {% endif %}
+
+                {% if user.is_authenticated %}
+                  <button class="btn btn_sucess" onclick="window.location.href=logout" >
+                 Cerrar Sesion</button>
+                {% endif %}
+
+                
+            </nav>
+
+            <div class="container">
+            <div class="row mt-4">
+
+              <div class="col-md-9">
+
+                <p>Listado de Reservas</p>
+                <table>
+                  <tr>
+                    <th>Nombre Completo</th>
+                    <th>Hotel</th>
+                    <th>Habitacion</th>
+                    <th>Cantidad de Persona</th>
+                    <th>Total</th>
+                    <th></th>
+                  </tr>
+
+                   {% for item in list_reservation %}
+                  <tr>
+                   
+                    <td >{{ item.full_name }}</td>
+                    <td >{{ item.name_hotel }}</td>
+                    <td >{{ item.name_room }}</td>
+                    <td >{{ item.count_person }}</td>
+                    <td >{{ item.total }}</td>
+
+
+                    <td ><button type="button" onclick="book({{ item.id }})" class="btn btn-primary">Detalle</button></td>
+                  </tr>
+
+                  {% endfor %}
+
+                </table><br>
+
+                {% if list_reservation|length == 0 %}
+                <div class="alert alert-warning" role="alert">
+                  No hay Reservas!
+                </div>
+                {% endif %}
+                
+
+              </div>
+              
+            </div>
+          </div>
+            </div>
+          </div>
+
+    </body>
+{% endblock %}
+
+
+<script type="text/javascript">
+  
+
+  async function book(id) {
+      let csrftoken = getCookie('csrftoken');
+      var url = window.location.origin+"/detail_reservation/"+id;
+      window.location.href=url;
+      
+  }
+
+
+  function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = cookies[i].trim();
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+</script>
+
+
+
+
+

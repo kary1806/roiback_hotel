@@ -1,0 +1,30 @@
+
+{% load static %}
+<link rel="stylesheet" type="text/css" href='{% static "css/index.css" %}'>
+
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+
+<script type="text/javascript">
+  
+  var login = "{% url 'core.login' %}"   
+  var dashboard = "{% url 'core.dashboard' %}"
+</script>
+{% block content %}
+<div class="wrapper fadeInDown">
+  <div id="formContent">
+    <!-- Tabs Titles -->
+
+
+    <!-- Login Form -->
+
+                        <input style="cursor: pointer;margin-top: 10%;" type="button" class="fadeIn fourth" value="Iniciar Sesion" onclick="window.location.href=login">
+                          <input style="cursor: pointer;" type="button" class="fadeIn fourth" 
+                          onclick="window.location.href=dashboard" value="Reservar">
+  </div>
+</div>
+{% endblock %}
+
+
+
+
+

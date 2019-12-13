@@ -9,6 +9,7 @@ from rest_framework.response import Response
 
 from django.db.models import Q,F,Sum,Value
 
+from hotelRock.settings import EMAIL_BACKEND
 from .models import TypeDocument,Category,Tags,Hotel,Profile,TypeRoom,ActivityHotel,ActivityRoom, \
 City,ActivityRoom,Reservation
 
@@ -24,6 +25,8 @@ from django.http import HttpResponse, JsonResponse, HttpResponseRedirect
 
 from datetime import datetime, timezone, timedelta
 from logs.models import Logs,Actions
+
+from mail.models import Message
 
 # Create your views here.
 
@@ -497,6 +500,20 @@ class GuestView(APIView):
 					if response == -1:
 						return Response({'error':True,'message':"La fecha no esta disponible"}, status=status.HTTP_400_BAD_REQUEST)
 
+					#send email of the reservation
+					contenido='<h3>Su reserva ha sido exitosa</h3><br><br>'
+					contenido = contenido + "Estimado usuario(a),<br /><br /> Env&iacute;o para su informaci&oacute;n, su reserva ya se guardo</strong>."		
+					contenido = contenido + '<br /><br /><br />Favor no responder este correo, es de uso informativo unicamente.<br /><br /><br />Gracias,<br /><br /><br />'
+					contenido = contenido + 'Soporte HOTEl ROCKBAI<br/>info@hotelrockbai.com'
+
+					mail = Message(
+								remitente=EMAIL_BACKEND,
+								destinatario=request.data["email"],
+								asunto='Reservacion',
+								contenido=contenido
+								)
+					mail.simpleSend()
+
 					# return render(request, "login.html", {'message':"Su Registro fue exitoso"})
 					return Response({'error':False,'message':response}, status=status.HTTP_200_OK)
 
@@ -505,6 +522,7 @@ class GuestView(APIView):
 			print(serializer.errors)
 			return Response({'error':True,'message':"Todos los campos son obligatorios"}, status=status.HTTP_400_BAD_REQUEST)
 		except Exception as e:
+			print(e)
 			return Response({'error':True,'message':"ERROR_SERVER"}, status=status.HTTP_400_BAD_REQUEST)
 
 #page when yo can show the detail of the reservation

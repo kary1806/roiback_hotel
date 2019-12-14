@@ -18,3 +18,5 @@ para ser administrador debe el usuario ser super admin en el administrador
 el correo jvaldezcafe@gmail.com con la clave: joana123 puede entrar como administrador
 
 el correo mplata@mail.com con la clave: 123456 puede entrar como usuario
+
+Si migra desde cero por favor ingresar los tags, ciudades ,categorias y tipo de documentos
